@@ -1,0 +1,12 @@
+.openapi-generator-ignore
+apis/CoffeeBeansApi.ts
+apis/index.ts
+index.ts
+models/BeansGet200Response.ts
+models/BeansGet200ResponseBeansInner.ts
+models/BeansGet500Response.ts
+models/BeansPost200Response.ts
+models/BeansPost200ResponseBean.ts
+models/BeansPostRequest.ts
+models/index.ts
+runtime.ts

@@ -1,4 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import {
+  BeansGet200ResponseBeansInner,
+  CoffeeBeansApi,
+  Configuration,
+} from "../generated-client";
+import { ProfileCard } from "../components/profileCard";
 // Define the type for coffee profiles
 type CoffeeProfile = {
   id: number;
@@ -40,6 +46,20 @@ const Home: React.FC = () => {
   const [selectedProfile, setSelectedProfile] = useState<CoffeeProfile | null>(
     null
   );
+
+  const [beans, setBeans] = useState<
+    BeansGet200ResponseBeansInner[] | null | undefined
+  >(null);
+
+  useEffect(() => {
+    const config = new Configuration({
+      basePath: "http://localhost:3000",
+    });
+    const api = new CoffeeBeansApi(config);
+    api.beansGet().then((response) => {
+      setBeans(response.beans);
+    });
+  }, []);
 
   // Filter profiles based on search query and active tag
   const filteredProfiles = coffeeProfiles.filter((profile) => {
@@ -116,6 +136,13 @@ const Home: React.FC = () => {
 
         {/* Profile Cards */}
         <main className="flex-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {beans && (
+            <>
+              {beans.map((bean, index) => (
+                <ProfileCard bean={bean} key={index} />
+              ))}
+            </>
+          )}
           {filteredProfiles.map((profile) => (
             <div
               key={profile.id}

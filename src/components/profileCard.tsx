@@ -1,22 +1,22 @@
-interface ProfileCardProps {
-    title: string;
-    location: string;
-    description: string;
-    image: string;
-  }
-  
-  const ProfileCard: React.FC<ProfileCardProps> = ({ title, location, description, image }) => {
-    return (
-      <div className="bg-white dark:bg-gray-700 shadow-md rounded-lg overflow-hidden">
-        <img src={image} alt={title} className="w-full h-48 object-cover" />
-        <div className="p-4">
-          <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100">{title}</h2>
-          <p className="text-gray-600 dark:text-gray-300">{location}</p>
-          <p className="text-gray-600 dark:text-gray-300 mt-2">{description}</p>
-        </div>
+import { BeansGet200ResponseBeansInner } from "@/generated-client";
+
+export function ProfileCard({bean} : {bean: BeansGet200ResponseBeansInner}) {
+  return (
+    <div
+      key={bean.beanId}
+      // onClick={() => handleCardClick(profile)}
+      className="bg-[#c8c8c8] text-[#333] shadow-md rounded-lg overflow-hidden cursor-pointer transition transform hover:scale-105 motion-preset-fade"
+    >
+      <img
+        src={bean.imageUrl}
+        alt={bean.name}
+        className="w-full h-48 object-cover"
+      />
+      <div className="p-4">
+        <h2 className="text-xl font-semibold">{bean.name}</h2>
+        <p className="text-sm">{bean.description}</p>
+        <p className="text-sm text-gray-600">{bean.origin}</p>
       </div>
-    );
-  };
-  
-  export default ProfileCard;
-  
+    </div>
+  );
+}
