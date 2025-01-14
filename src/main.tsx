@@ -1,9 +1,9 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Navbar from './components/navbar';
-import Home from './pages/Home';
-import './index.css';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import Navbar from "./components/navbar";
+import "./index.css";
+import Home from "./pages/Home";
 
 const Main: React.FC = () => {
   return (
@@ -18,8 +18,8 @@ const Main: React.FC = () => {
   );
 };
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
+ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <Main />
-  </React.StrictMode>,
+  </React.StrictMode>
 );

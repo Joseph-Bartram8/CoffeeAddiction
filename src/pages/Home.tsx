@@ -1,8 +1,4 @@
-import React, { useState } from 'react';
-import coffeePouch1 from '../images/coffee_pouch1.png';
-import coffeePouch2 from '../images/coffee_pouch2.png';
-import coffeePouch3 from '../images/coffee_pouch3.png';
-
+import React, { useState } from "react";
 // Define the type for coffee profiles
 type CoffeeProfile = {
   id: number;
@@ -13,17 +9,37 @@ type CoffeeProfile = {
 };
 
 const coffeeProfiles: CoffeeProfile[] = [
-  { id: 1, name: 'Sunrise Valley', location: 'Brazil', description: 'A rich blend with hints of caramel and chocolate.', image: coffeePouch1 },
-  { id: 2, name: 'Mountain Peaks', location: 'Colombia', description: 'Smooth, fruity notes of Colombia’s finest coffee.', image: coffeePouch2 },
-  { id: 3, name: 'Sunset Roast', location: 'Ethiopia', description: 'A bold, dark roast with smoky undertones.', image: coffeePouch3 },
+  {
+    id: 1,
+    name: "Sunrise Valley",
+    location: "Brazil",
+    description: "A rich blend with hints of caramel and chocolate.",
+    image: "coffee_pouch1.png",
+  },
+  {
+    id: 2,
+    name: "Mountain Peaks",
+    location: "Colombia",
+    description: "Smooth, fruity notes of Colombia’s finest coffee.",
+    image: "coffee_pouch2.png",
+  },
+  {
+    id: 3,
+    name: "Sunset Roast",
+    location: "Ethiopia",
+    description: "A bold, dark roast with smoky undertones.",
+    image: "coffee_pouch3.png",
+  },
 ];
 
-const tags = ['All', 'Brazil', 'Colombia', 'Ethiopia'];
+const tags = ["All", "Brazil", "Colombia", "Ethiopia"];
 
 const Home: React.FC = () => {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [activeTag, setActiveTag] = useState('All');
-  const [selectedProfile, setSelectedProfile] = useState<CoffeeProfile | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [activeTag, setActiveTag] = useState("All");
+  const [selectedProfile, setSelectedProfile] = useState<CoffeeProfile | null>(
+    null
+  );
 
   // Filter profiles based on search query and active tag
   const filteredProfiles = coffeeProfiles.filter((profile) => {
@@ -32,7 +48,7 @@ const Home: React.FC = () => {
       profile.name.toLowerCase().includes(query) ||
       profile.location.toLowerCase().includes(query) ||
       profile.description.toLowerCase().includes(query);
-    const matchesTag = activeTag === 'All' || profile.location === activeTag;
+    const matchesTag = activeTag === "All" || profile.location === activeTag;
     return matchesSearch && matchesTag;
   });
 
@@ -41,8 +57,8 @@ const Home: React.FC = () => {
   };
 
   const clearFilters = () => {
-    setSearchQuery('');
-    setActiveTag('All');
+    setSearchQuery("");
+    setActiveTag("All");
   };
 
   const closeModal = () => {
@@ -51,7 +67,7 @@ const Home: React.FC = () => {
 
   const handleBackgroundClick = (e: React.MouseEvent<HTMLDivElement>) => {
     // Ensure the click is on the background and not on the modal itself
-    if ((e.target as HTMLElement).id === 'modal-background') {
+    if ((e.target as HTMLElement).id === "modal-background") {
       closeModal();
     }
   };
@@ -87,7 +103,9 @@ const Home: React.FC = () => {
                 key={tag}
                 onClick={() => setActiveTag(tag)}
                 className={`w-full px-4 py-2 rounded-lg ${
-                  activeTag === tag ? 'bg-[#333] text-white' : 'bg-[#e0e0e0] text-[#333]'
+                  activeTag === tag
+                    ? "bg-[#333] text-white"
+                    : "bg-[#e0e0e0] text-[#333]"
                 } border border-gray-400`}
               >
                 {tag}
@@ -146,7 +164,9 @@ const Home: React.FC = () => {
             />
             <h2 className="text-2xl font-bold mt-4">{selectedProfile.name}</h2>
             <p className="mt-2">{selectedProfile.description}</p>
-            <p className="text-sm text-gray-600 mt-2">{selectedProfile.location}</p>
+            <p className="text-sm text-gray-600 mt-2">
+              {selectedProfile.location}
+            </p>
           </div>
         </div>
       )}
