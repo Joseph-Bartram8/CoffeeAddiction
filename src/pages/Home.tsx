@@ -118,6 +118,7 @@ const Home: React.FC = () => {
 
           {/* Tags */}
           <div className="mb-6 space-y-4">
+          <h2 className="text-lg font-semibold mb-2">Category</h2>
             {tags.map((tag) => (
               <button
                 key={tag}
