@@ -8,10 +8,7 @@ import './index.css';
 const Main: React.FC = () => {
   return (
     <Router>
-      {/* Global Navbar */}
       <Navbar />
-
-      {/* Page Content */}
       <main className="container mx-auto p-4">
         <Routes>
           <Route path="/" element={<Home />} />
@@ -21,7 +18,6 @@ const Main: React.FC = () => {
   );
 };
 
-// Render the Main component into the #root element
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <Main />
