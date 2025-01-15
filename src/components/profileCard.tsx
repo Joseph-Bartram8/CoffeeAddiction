@@ -1,10 +1,14 @@
 import { BeansGet200ResponseBeansInner } from "@/generated-client";
 
-export function ProfileCard({bean} : {bean: BeansGet200ResponseBeansInner}) {
+interface ProfileCardProps {
+  bean: BeansGet200ResponseBeansInner;
+  onClick: () => void;
+}
+
+export function ProfileCard({ bean, onClick }: ProfileCardProps) {
   return (
     <div
-      key={bean.beanId}
-      // onClick={() => handleCardClick(profile)}
+      onClick={onClick}
       className="bg-[#c8c8c8] text-[#333] shadow-md rounded-lg overflow-hidden cursor-pointer transition transform hover:scale-105 motion-preset-fade"
     >
       <img

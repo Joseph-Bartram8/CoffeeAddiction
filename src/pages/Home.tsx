@@ -5,51 +5,14 @@ import {
   Configuration,
 } from "../generated-client";
 import { ProfileCard } from "../components/profileCard";
-// Define the type for coffee profiles
-type CoffeeProfile = {
-  id: number;
-  name: string;
-  location: string;
-  description: string;
-  image: string;
-};
-
-const coffeeProfiles: CoffeeProfile[] = [
-  {
-    id: 1,
-    name: "Sunrise Valley",
-    location: "Brazil",
-    description: "A rich blend with hints of caramel and chocolate.",
-    image: "coffee_pouch1.png",
-  },
-  {
-    id: 2,
-    name: "Mountain Peaks",
-    location: "Colombia",
-    description: "Smooth, fruity notes of Colombia’s finest coffee.",
-    image: "coffee_pouch2.png",
-  },
-  {
-    id: 3,
-    name: "Sunset Roast",
-    location: "Ethiopia",
-    description: "A bold, dark roast with smoky undertones.",
-    image: "coffee_pouch3.png",
-  },
-];
 
 const tags = ["All", "Brazil", "Colombia", "Ethiopia"];
 
 const Home: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTag, setActiveTag] = useState("All");
-  const [selectedProfile, setSelectedProfile] = useState<CoffeeProfile | null>(
-    null
-  );
-
-  const [beans, setBeans] = useState<
-    BeansGet200ResponseBeansInner[] | null | undefined
-  >(null);
+  const [selectedProfile, setSelectedProfile] = useState<BeansGet200ResponseBeansInner | null>(null);
+  const [beans, setBeans] = useState<BeansGet200ResponseBeansInner[] | null>(null);
 
   useEffect(() => {
     const config = new Configuration({
@@ -57,24 +20,27 @@ const Home: React.FC = () => {
     });
     const api = new CoffeeBeansApi(config);
     api.beansGet().then((response) => {
-      setBeans(response.beans);
-    });
-  }, []);
+        if (response.beans) {
+          setBeans(response.beans);
+        } else {
+          setBeans([]); // If beans is undefined or null, set it to an empty array
+        }
+      }).catch((error) => {
+        console.error("Failed to fetch beans:", error);
+        setBeans([]); // Handle the error case gracefully
+      });
+    }, []);
 
-  // Filter profiles based on search query and active tag
-  const filteredProfiles = coffeeProfiles.filter((profile) => {
+  // Filter beans based on search query and active tag
+  const filteredBeans = beans?.filter((bean) => {
     const query = searchQuery.toLowerCase();
     const matchesSearch =
-      profile.name.toLowerCase().includes(query) ||
-      profile.location.toLowerCase().includes(query) ||
-      profile.description.toLowerCase().includes(query);
-    const matchesTag = activeTag === "All" || profile.location === activeTag;
+      bean.name?.toLowerCase().includes(query) ||
+      bean.origin?.toLowerCase().includes(query) ||
+      bean.description?.toLowerCase().includes(query);
+    const matchesTag = activeTag === "All" || bean.origin === activeTag;
     return matchesSearch && matchesTag;
   });
-
-  const handleCardClick = (profile: CoffeeProfile) => {
-    setSelectedProfile(profile);
-  };
 
   const clearFilters = () => {
     setSearchQuery("");
@@ -86,7 +52,6 @@ const Home: React.FC = () => {
   };
 
   const handleBackgroundClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    // Ensure the click is on the background and not on the modal itself
     if ((e.target as HTMLElement).id === "modal-background") {
       closeModal();
     }
@@ -118,7 +83,7 @@ const Home: React.FC = () => {
 
           {/* Tags */}
           <div className="mb-6 space-y-4">
-          <h2 className="text-lg font-semibold mb-2">Category</h2>
+            <h2 className="text-lg font-semibold mb-2">Category</h2>
             {tags.map((tag) => (
               <button
                 key={tag}
@@ -137,33 +102,14 @@ const Home: React.FC = () => {
 
         {/* Profile Cards */}
         <main className="flex-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {beans && (
-            <>
-              {beans.map((bean, index) => (
-                <ProfileCard bean={bean} key={index} />
-              ))}
-            </>
-          )}
-          {filteredProfiles.map((profile) => (
-            <div
-              key={profile.id}
-              onClick={() => handleCardClick(profile)}
-              className="bg-[#c8c8c8] text-[#333] shadow-md rounded-lg overflow-hidden cursor-pointer transition transform hover:scale-105"
-            >
-              <img
-                src={profile.image}
-                alt={profile.name}
-                className="w-full h-48 object-cover"
-              />
-              <div className="p-4">
-                <h2 className="text-xl font-semibold">{profile.name}</h2>
-                <p className="text-sm">{profile.description}</p>
-                <p className="text-sm text-gray-600">{profile.location}</p>
-              </div>
-            </div>
+          {filteredBeans?.map((bean) => (
+            <ProfileCard
+              key={bean.beanId}
+              bean={bean}
+              onClick={() => setSelectedProfile(bean)}
+            />
           ))}
-
-          {filteredProfiles.length === 0 && (
+          {filteredBeans && filteredBeans.length === 0 && (
             <p className="col-span-full text-center text-gray-600">
               No profiles match your search or filter.
             </p>
@@ -186,14 +132,14 @@ const Home: React.FC = () => {
               &times;
             </button>
             <img
-              src={selectedProfile.image}
-              alt={selectedProfile.name}
+              src={selectedProfile.imageUrl || ""}
+              alt={selectedProfile.name || ""}
               className="w-full h-48 object-cover rounded-md"
             />
             <h2 className="text-2xl font-bold mt-4">{selectedProfile.name}</h2>
             <p className="mt-2">{selectedProfile.description}</p>
             <p className="text-sm text-gray-600 mt-2">
-              {selectedProfile.location}
+              {selectedProfile.origin}
             </p>
           </div>
         </div>
