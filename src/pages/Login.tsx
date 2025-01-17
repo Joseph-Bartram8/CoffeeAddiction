@@ -1,32 +1,32 @@
-import { CoffeeBeansApi, Configuration } from "@/generated-client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import { Configuration, LoginPostRequest, UsersApi } from "../generated-client";
 
 const Login: React.FC = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [loginRequest, setLoginRequest] = useState<LoginPostRequest>();
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    
-    console.log("Username:", username, "Password:", password);
-  };
+    if (!loginRequest?.username || !loginRequest?.password) {
+      alert("Please fill in all fields");
+      return;
+    }
 
-  useEffect(() => {
     const config = new Configuration({
       basePath: "http://localhost:3000",
     });
-    const api = new CoffeeBeansApi(config);
-    api.().then((response) => {
-        if (response.beans) {
-          setBeans(response.beans);
-        } else {
-          setBeans([]); // If beans is undefined or null, set it to an empty array
-        }
-      }).catch((error) => {
-        console.error("Failed to fetch beans:", error);
-        setBeans([]); // Handle the error case gracefully
+    const api = new UsersApi(config);
+    api
+      .loginPost({
+        loginPostRequest: loginRequest,
+      })
+      .then((response) => {
+        console.log(response.user?.firstName as string);
+        localStorage.setItem("jwt", response.user?.jwt as string);
+      })
+      .catch((error) => {
+        console.error("Failed to login:", error);
       });
-    }, []);
+  };
 
   return (
     <div className="bg-[#e9ecef] text-[#333] min-h-screen p-6 flex items-center justify-center">
@@ -35,14 +35,19 @@ const Login: React.FC = () => {
         <form onSubmit={handleLogin} className="space-y-4">
           {/* Username Field */}
           <div>
-            <label htmlFor="username" className="block text-sm font-medium mb-2">
+            <label
+              htmlFor="username"
+              className="block text-sm font-medium mb-2"
+            >
               Username
             </label>
             <input
               type="text"
               id="username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              value={loginRequest?.username}
+              onChange={(e) =>
+                setLoginRequest({ ...loginRequest, username: e.target.value })
+              }
               className="w-full p-3 border rounded-lg bg-[#e0e0e0] border-gray-400"
               placeholder="Enter your username"
               required
@@ -51,14 +56,19 @@ const Login: React.FC = () => {
 
           {/* Password Field */}
           <div>
-            <label htmlFor="password" className="block text-sm font-medium mb-2">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium mb-2"
+            >
               Password
             </label>
             <input
               type="password"
               id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={loginRequest?.password}
+              onChange={(e) =>
+                setLoginRequest({ ...loginRequest, password: e.target.value })
+              }
               className="w-full p-3 border rounded-lg bg-[#e0e0e0] border-gray-400"
               placeholder="Enter your password"
               required

@@ -6,3 +6,8 @@ export * from './BeansGet500Response';
 export * from './BeansPost200Response';
 export * from './BeansPost200ResponseBean';
 export * from './BeansPostRequest';
+export * from './LoginPost200Response';
+export * from './LoginPost200ResponseUser';
+export * from './LoginPostRequest';
+export * from './SignupPost200Response';
+export * from './SignupPostRequest';
