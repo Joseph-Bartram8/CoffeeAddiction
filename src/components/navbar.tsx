@@ -23,10 +23,10 @@ const Navbar: React.FC = () => {
             <span className="absolute left-0 bottom-[-2px] h-[2px] w-0 bg-black group-hover:w-full transition-all duration-300"></span>
           </Link>
           <Link
-            to="/about"
+            to="../pages/Origins.tsx"
             className="text-[#333] hover:text-[#000] transition relative group"
           >
-            About
+            Origins
             <span className="absolute left-0 bottom-[-2px] h-[2px] w-0 bg-black group-hover:w-full transition-all duration-300"></span>
           </Link>
         </nav>

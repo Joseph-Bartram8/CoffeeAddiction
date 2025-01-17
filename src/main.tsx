@@ -4,6 +4,7 @@ import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import Navbar from "./components/navbar";
 import "./index.css";
 import Home from "./pages/Home";
+import Origins from "./pages/Origins";
 
 const Main: React.FC = () => {
   return (
@@ -12,6 +13,7 @@ const Main: React.FC = () => {
       <main className="container mx-auto p-4">
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="pages/Origins.tsx" element={<Origins />} />
         </Routes>
       </main>
     </Router>

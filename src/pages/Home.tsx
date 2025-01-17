@@ -6,11 +6,9 @@ import {
 } from "../generated-client";
 import { ProfileCard } from "../components/profileCard";
 
-const tags = ["All", "Brazil", "Colombia", "Ethiopia"];
-
 const Home: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [activeTag, setActiveTag] = useState("All");
+  const [activeTags, setActiveTags] = useState<string[]>([]);
   const [selectedProfile, setSelectedProfile] = useState<BeansGet200ResponseBeansInner | null>(null);
   const [beans, setBeans] = useState<BeansGet200ResponseBeansInner[] | null>(null);
 
@@ -31,21 +29,44 @@ const Home: React.FC = () => {
       });
     }, []);
 
-  // Filter beans based on search query and active tag
-  const filteredBeans = beans?.filter((bean) => {
-    const query = searchQuery.toLowerCase();
-    const matchesSearch =
-      bean.name?.toLowerCase().includes(query) ||
-      bean.origin?.toLowerCase().includes(query) ||
-      bean.description?.toLowerCase().includes(query);
-    const matchesTag = activeTag === "All" || bean.origin === activeTag;
-    return matchesSearch && matchesTag;
-  });
+    const originTags = Array.from(new Set(beans?.map((bean) => bean.origin) || []));
+    const roastLevelTags = Array.from(
+    new Set(beans?.map((bean) => bean.roastLevel) || [])
+    );
 
-  const clearFilters = () => {
-    setSearchQuery("");
-    setActiveTag("All");
-  };
+    // Combine origins and roast levels for dynamic tags
+    const dynamicTags = [...originTags, ...roastLevelTags];
+
+    // Filter beans based on search query and active tags
+    const filteredBeans = beans?.filter((bean) => {
+        const query = searchQuery.toLowerCase();
+        const matchesSearch =
+        bean.name?.toLowerCase().includes(query) ||
+        bean.origin?.toLowerCase().includes(query) ||
+        bean.description?.toLowerCase().includes(query);
+
+        // Check if bean matches at least one active tag
+        const matchesTags =
+        activeTags.length === 0 ||
+        activeTags.includes(bean.origin || "") ||
+        activeTags.includes(bean.roastLevel || "");
+
+        return matchesSearch && matchesTags;
+    });
+
+    const toggleTag = (tag: string) => {
+        // Toggle tag in activeTags state
+        setActiveTags((prevTags) =>
+        prevTags.includes(tag)
+            ? prevTags.filter((t) => t !== tag) // Remove if already active
+            : [...prevTags, tag] // Add if not active
+        );
+    };
+
+    const clearFilters = () => {
+        setSearchQuery("");
+        setActiveTags([]);
+    };
 
   const closeModal = () => {
     setSelectedProfile(null);
@@ -81,22 +102,24 @@ const Home: React.FC = () => {
             Clear
           </button>
 
-          {/* Tags */}
-          <div className="mb-6 space-y-4">
-            <h2 className="text-lg font-semibold mb-2">Category</h2>
-            {tags.map((tag) => (
-              <button
-                key={tag}
-                onClick={() => setActiveTag(tag)}
-                className={`w-full px-4 py-2 rounded-lg ${
-                  activeTag === tag
-                    ? "bg-[#333] text-white"
-                    : "bg-[#e0e0e0] text-[#333]"
-                } border border-gray-400`}
-              >
-                {tag}
-              </button>
-            ))}
+          {/* Dynamic Tags */}
+          <div className="mb-6">
+            <h2 className="text-lg font-semibold mb-2">Tags</h2>
+            <div className="flex flex-wrap gap-2">
+              {dynamicTags.map((tag) => (
+                <button
+                  key={tag}
+                  onClick={() => toggleTag(tag || "")}
+                  className={`px-4 py-2 rounded-lg ${
+                    activeTags.includes(tag || "")
+                      ? "bg-[#333] text-white"
+                      : "bg-[#e0e0e0] text-[#333]"
+                  } border border-gray-400`}
+                >
+                  {tag}
+                </button>
+              ))}
+            </div>
           </div>
         </aside>
 
