@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { Configuration, LoginPostRequest, UsersApi } from "../generated-client";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
   const [loginRequest, setLoginRequest] = useState<LoginPostRequest>();
   const [error, setError] = useState<string>("");
+  const navigate = useNavigate();
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,8 +23,9 @@ export default function Login() {
         loginPostRequest: loginRequest,
       })
       .then((response) => {
-        console.log(response.user?.firstName as string);
-        localStorage.setItem("jwt", response.user?.jwt as string);
+        console.log(response);
+        localStorage.setItem("jwt", response.jwt as string);
+        navigate("/dashboard");
       })
       .catch(() => {
         setError("Invalid credentials!");

@@ -13,14 +13,6 @@
  */
 
 import { mapValues } from '../runtime';
-import type { LoginPost200ResponseUser } from './LoginPost200ResponseUser';
-import {
-    LoginPost200ResponseUserFromJSON,
-    LoginPost200ResponseUserFromJSONTyped,
-    LoginPost200ResponseUserToJSON,
-    LoginPost200ResponseUserToJSONTyped,
-} from './LoginPost200ResponseUser';
-
 /**
  * 
  * @export
@@ -28,11 +20,47 @@ import {
  */
 export interface LoginPost200Response {
     /**
-     * 
-     * @type {LoginPost200ResponseUser}
+     * Unique identifier for the user
+     * @type {number}
      * @memberof LoginPost200Response
      */
-    user?: LoginPost200ResponseUser;
+    userId?: number;
+    /**
+     * Username of the user
+     * @type {string}
+     * @memberof LoginPost200Response
+     */
+    username?: string;
+    /**
+     * JWT token of user
+     * @type {string}
+     * @memberof LoginPost200Response
+     */
+    jwt?: string;
+    /**
+     * Number of login attempts for the user
+     * @type {number}
+     * @memberof LoginPost200Response
+     */
+    loginAttempts?: number;
+    /**
+     * First name of the user
+     * @type {string}
+     * @memberof LoginPost200Response
+     */
+    firstName?: string;
+    /**
+     * Last name of the user
+     * @type {string}
+     * @memberof LoginPost200Response
+     */
+    lastName?: string;
+    /**
+     * Date and time when the user was created
+     * @type {Date}
+     * @memberof LoginPost200Response
+     */
+    createdAt?: Date;
 }
 
 /**
@@ -52,7 +80,13 @@ export function LoginPost200ResponseFromJSONTyped(json: any, ignoreDiscriminator
     }
     return {
         
-        'user': json['user'] == null ? undefined : LoginPost200ResponseUserFromJSON(json['user']),
+        'userId': json['userId'] == null ? undefined : json['userId'],
+        'username': json['username'] == null ? undefined : json['username'],
+        'jwt': json['jwt'] == null ? undefined : json['jwt'],
+        'loginAttempts': json['loginAttempts'] == null ? undefined : json['loginAttempts'],
+        'firstName': json['firstName'] == null ? undefined : json['firstName'],
+        'lastName': json['lastName'] == null ? undefined : json['lastName'],
+        'createdAt': json['createdAt'] == null ? undefined : (new Date(json['createdAt'])),
     };
 }
 
@@ -67,7 +101,13 @@ export function LoginPost200ResponseToJSONTyped(value?: LoginPost200Response | n
 
     return {
         
-        'user': LoginPost200ResponseUserToJSON(value['user']),
+        'userId': value['userId'],
+        'username': value['username'],
+        'jwt': value['jwt'],
+        'loginAttempts': value['loginAttempts'],
+        'firstName': value['firstName'],
+        'lastName': value['lastName'],
+        'createdAt': value['createdAt'] == null ? undefined : ((value['createdAt']).toISOString()),
     };
 }
 

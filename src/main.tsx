@@ -8,6 +8,7 @@ import Login from "./pages/Login";
 import Origins from "./pages/Origins";
 import { Signup } from "./pages/Signup";
 import { Dashboard } from "./pages/Dashboard";
+import { CreateBean } from "./pages/CreateBean";
 
 const Main: React.FC = () => {
   return (
@@ -20,6 +21,7 @@ const Main: React.FC = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard/create" element={<CreateBean />} />
         </Routes>
       </main>
     </Router>

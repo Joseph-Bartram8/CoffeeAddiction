@@ -15,15 +15,27 @@
 
 import * as runtime from '../runtime';
 import type {
+  BeanIdDelete200Response,
+  BeansGet200Response,
   BeansGet500Response,
+  BeansPost200Response,
+  BeansPostRequest,
   LoginPost200Response,
   LoginPostRequest,
   SignupPost200Response,
   SignupPostRequest,
 } from '../models/index';
 import {
+    BeanIdDelete200ResponseFromJSON,
+    BeanIdDelete200ResponseToJSON,
+    BeansGet200ResponseFromJSON,
+    BeansGet200ResponseToJSON,
     BeansGet500ResponseFromJSON,
     BeansGet500ResponseToJSON,
+    BeansPost200ResponseFromJSON,
+    BeansPost200ResponseToJSON,
+    BeansPostRequestFromJSON,
+    BeansPostRequestToJSON,
     LoginPost200ResponseFromJSON,
     LoginPost200ResponseToJSON,
     LoginPostRequestFromJSON,
@@ -34,6 +46,10 @@ import {
     SignupPostRequestToJSON,
 } from '../models/index';
 
+export interface BeanIdDeleteRequest {
+    id: number;
+}
+
 export interface LoginPostOperationRequest {
     loginPostRequest: LoginPostRequest;
 }
@@ -42,10 +58,49 @@ export interface SignupPostOperationRequest {
     signupPostRequest: SignupPostRequest;
 }
 
+export interface UserBeanCreatePostRequest {
+    beansPostRequest: BeansPostRequest;
+}
+
 /**
  * 
  */
 export class UsersApi extends runtime.BaseAPI {
+
+    /**
+     * Deletes a bean owned by the user from the database
+     * Deletes a bean owned by the user
+     */
+    async beanIdDeleteRaw(requestParameters: BeanIdDeleteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<BeanIdDelete200Response>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling beanIdDelete().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/bean/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => BeanIdDelete200ResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Deletes a bean owned by the user from the database
+     * Deletes a bean owned by the user
+     */
+    async beanIdDelete(requestParameters: BeanIdDeleteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<BeanIdDelete200Response> {
+        const response = await this.beanIdDeleteRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
 
     /**
      * Logs in a user with their email and password
@@ -120,6 +175,72 @@ export class UsersApi extends runtime.BaseAPI {
      */
     async signupPost(requestParameters: SignupPostOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SignupPost200Response> {
         const response = await this.signupPostRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates a new bean owned by the user in the database
+     * Creates a new bean owned by the user
+     */
+    async userBeanCreatePostRaw(requestParameters: UserBeanCreatePostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<BeansPost200Response>> {
+        if (requestParameters['beansPostRequest'] == null) {
+            throw new runtime.RequiredError(
+                'beansPostRequest',
+                'Required parameter "beansPostRequest" was null or undefined when calling userBeanCreatePost().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/user/bean/create`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: BeansPostRequestToJSON(requestParameters['beansPostRequest']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => BeansPost200ResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Creates a new bean owned by the user in the database
+     * Creates a new bean owned by the user
+     */
+    async userBeanCreatePost(requestParameters: UserBeanCreatePostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<BeansPost200Response> {
+        const response = await this.userBeanCreatePostRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Retrieves a list of beans owned by the user from the database
+     * Returns list of beans owned by the user
+     */
+    async userBeansGetRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<BeansGet200Response>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/user/beans`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => BeansGet200ResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Retrieves a list of beans owned by the user from the database
+     * Returns list of beans owned by the user
+     */
+    async userBeansGet(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<BeansGet200Response> {
+        const response = await this.userBeansGetRaw(initOverrides);
         return await response.value();
     }
 

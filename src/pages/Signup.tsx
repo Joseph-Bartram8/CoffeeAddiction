@@ -4,7 +4,7 @@ import {
   SignupPostRequest,
   UsersApi,
 } from "../generated-client";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 
 export function Signup() {
   const [signupRequest, setSignupRequest] = useState<SignupPostRequest>({});

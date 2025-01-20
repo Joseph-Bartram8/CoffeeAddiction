@@ -3,6 +3,7 @@ apis/CoffeeBeansApi.ts
 apis/UsersApi.ts
 apis/index.ts
 index.ts
+models/BeanIdDelete200Response.ts
 models/BeansGet200Response.ts
 models/BeansGet200ResponseBeansInner.ts
 models/BeansGet500Response.ts
@@ -10,7 +11,6 @@ models/BeansPost200Response.ts
 models/BeansPost200ResponseBean.ts
 models/BeansPostRequest.ts
 models/LoginPost200Response.ts
-models/LoginPost200ResponseUser.ts
 models/LoginPostRequest.ts
 models/SignupPost200Response.ts
 models/SignupPostRequest.ts
