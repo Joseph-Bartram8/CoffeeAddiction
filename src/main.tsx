@@ -4,8 +4,10 @@ import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import Navbar from "./components/navbar";
 import "./index.css";
 import Home from "./pages/Home";
-import Origins from "./pages/Origins";
 import Login from "./pages/Login";
+import Origins from "./pages/Origins";
+import { Signup } from "./pages/Signup";
+import { Dashboard } from "./pages/Dashboard";
 
 const Main: React.FC = () => {
   return (
@@ -14,8 +16,10 @@ const Main: React.FC = () => {
       <main className="container mx-auto p-4">
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/Origins" element={<Origins />} />
-          <Route path="/Login" element={<Login />} />
+          <Route path="/origins" element={<Origins />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/dashboard" element={<Dashboard />} />
         </Routes>
       </main>
     </Router>

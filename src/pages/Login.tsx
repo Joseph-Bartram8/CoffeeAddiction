@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { Configuration, LoginPostRequest, UsersApi } from "../generated-client";
 
-const Login: React.FC = () => {
+export default function Login() {
   const [loginRequest, setLoginRequest] = useState<LoginPostRequest>();
+  const [error, setError] = useState<string>("");
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,8 +24,8 @@ const Login: React.FC = () => {
         console.log(response.user?.firstName as string);
         localStorage.setItem("jwt", response.user?.jwt as string);
       })
-      .catch((error) => {
-        console.error("Failed to login:", error);
+      .catch(() => {
+        setError("Invalid credentials!");
       });
   };
 
@@ -34,6 +35,7 @@ const Login: React.FC = () => {
         <h1 className="text-2xl font-bold text-center mb-6">Login</h1>
         <form onSubmit={handleLogin} className="space-y-4">
           {/* Username Field */}
+          <div className="text-red-500">{error}</div>
           <div>
             <label
               htmlFor="username"
@@ -86,6 +88,4 @@ const Login: React.FC = () => {
       </div>
     </div>
   );
-};
-
-export default Login;
+}
