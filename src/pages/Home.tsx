@@ -17,56 +17,52 @@ const Home: React.FC = () => {
       basePath: "http://localhost:3000",
     });
     const api = new CoffeeBeansApi(config);
-    api.beansGet().then((response) => {
+    api
+      .beansGet()
+      .then((response) => {
         if (response.beans) {
           setBeans(response.beans);
         } else {
-          setBeans([]); // If beans is undefined or null, set it to an empty array
+          setBeans([]);
         }
-      }).catch((error) => {
+      })
+      .catch((error) => {
         console.error("Failed to fetch beans:", error);
-        setBeans([]); // Handle the error case gracefully
+        setBeans([]);
       });
-    }, []);
+  }, []);
 
-    const originTags = Array.from(new Set(beans?.map((bean) => bean.origin) || []));
-    const roastLevelTags = Array.from(
-    new Set(beans?.map((bean) => bean.roastLevel) || [])
+  const originTags = Array.from(new Set(beans?.map((bean) => bean.origin) || []));
+  const roastLevelTags = Array.from(new Set(beans?.map((bean) => bean.roastLevel) || []));
+  const dynamicTags = [...originTags, ...roastLevelTags];
+
+  const filteredBeans = beans?.filter((bean) => {
+    const query = searchQuery.toLowerCase();
+    const matchesSearch =
+      bean.name?.toLowerCase().includes(query) ||
+      bean.origin?.toLowerCase().includes(query) ||
+      bean.description?.toLowerCase().includes(query);
+
+    const matchesTags =
+      activeTags.length === 0 ||
+      activeTags.includes(bean.origin || "") ||
+      activeTags.includes(bean.roastLevel || "");
+
+    return matchesSearch && matchesTags;
+  });
+
+  const toggleTag = (tag: string) => {
+    setActiveTags((prevTags) =>
+      prevTags.includes(tag)
+        ? prevTags.filter((t) => t !== tag)
+        : [...prevTags, tag]
     );
+  };
 
-    // Combine origins and roast levels for dynamic tags
-    const dynamicTags = [...originTags, ...roastLevelTags];
-
-    // Filter beans based on search query and active tags
-    const filteredBeans = beans?.filter((bean) => {
-        const query = searchQuery.toLowerCase();
-        const matchesSearch =
-        bean.name?.toLowerCase().includes(query) ||
-        bean.origin?.toLowerCase().includes(query) ||
-        bean.description?.toLowerCase().includes(query);
-
-        // Check if bean matches at least one active tag
-        const matchesTags =
-        activeTags.length === 0 ||
-        activeTags.includes(bean.origin || "") ||
-        activeTags.includes(bean.roastLevel || "");
-
-        return matchesSearch && matchesTags;
-    });
-
-    const toggleTag = (tag: string) => {
-        // Toggle tag in activeTags state
-        setActiveTags((prevTags) =>
-        prevTags.includes(tag)
-            ? prevTags.filter((t) => t !== tag) // Remove if already active
-            : [...prevTags, tag] // Add if not active
-        );
-    };
-
-    const clearFilters = () => {
-        setSearchQuery("");
-        setActiveTags([]);
-    };
+  const clearFilters = () => {
+    setSearchQuery("");
+    setActiveTags([]);
+  };
 
   const closeModal = () => {
     setSelectedProfile(null);
@@ -80,11 +76,11 @@ const Home: React.FC = () => {
 
   return (
     <div className="bg-[#e9ecef] text-[#333] min-h-screen p-4">
-      <div className="container mx-auto flex space-x-6">
-        {/* Sidebar: Search and Tags */}
-        <aside className="w-1/4">
+      <div className="container mx-auto flex flex-col lg:flex-row space-y-6 lg:space-y-0 lg:space-x-6">
+        {/* Search and Filters Section */}
+        <aside className="w-full lg:w-1/4 flex flex-col space-y-6">
           {/* Search Bar */}
-          <div className="mb-4">
+          <div>
             <input
               type="text"
               placeholder="Search coffee..."
@@ -97,13 +93,13 @@ const Home: React.FC = () => {
           {/* Clear Button */}
           <button
             onClick={clearFilters}
-            className="w-full px-4 py-2 mb-6 rounded-lg bg-[#343a40] text-white"
+            className="w-full px-4 py-2 rounded-lg bg-[#343a40] text-white"
           >
             Clear
           </button>
 
           {/* Dynamic Tags */}
-          <div className="mb-6">
+          <div>
             <h2 className="text-lg font-semibold mb-2">Tags</h2>
             <div className="flex flex-wrap gap-2">
               {dynamicTags.map((tag) => (
@@ -123,7 +119,7 @@ const Home: React.FC = () => {
           </div>
         </aside>
 
-        {/* Profile Cards */}
+        {/* Profile Cards Section */}
         <main className="flex-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredBeans?.map((bean) => (
             <ProfileCard

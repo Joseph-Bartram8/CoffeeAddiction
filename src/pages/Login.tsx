@@ -24,8 +24,10 @@ export default function Login() {
       })
       .then((response) => {
         console.log(response);
+        localStorage.setItem("firstName", response.firstName as string);
+        localStorage.setItem("lastName", response.lastName as string);
         localStorage.setItem("jwt", response.jwt as string);
-        navigate("/dashboard");
+        navigate("/");
       })
       .catch(() => {
         setError("Invalid credentials!");

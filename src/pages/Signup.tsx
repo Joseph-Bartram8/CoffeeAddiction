@@ -27,7 +27,7 @@ export function Signup() {
       })
       .then((response) => {
         localStorage.setItem("jwt", response.jwt as string);
-        navigate("/dashboard")
+        navigate("/login")
       })
       .catch((error) => {
         console.error("Failed to signup:", error);
